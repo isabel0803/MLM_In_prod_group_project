@@ -1,0 +1,7 @@
+# ignore service account keys
+secrets/
+*.json
+
+# typical python ignores
+__pycache__/
+*.pyc
