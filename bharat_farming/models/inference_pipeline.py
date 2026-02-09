@@ -1,24 +1,45 @@
-import pandas as pd
 import joblib
-from utils_gcs import load_csv_gcs
 from google.cloud import storage
-import tempfile
+import io
+from utils_gcs import PROJECT_ID, load_csv_gcs, save_csv_to_gcs
 
-BUCKET = "your-bucket-name"   # <— CHANGE
-MODEL_PATH = "artifacts/models/final_model.pkl"
+# Configuration
+BUCKET_NAME = "group_project2"
+MODEL_PATH = "pipeline_artifacts/final_model.pkl"
+DATA_PATH = "inputs/new_data.csv"
+OUTPUT_PATH = "outputs/predictions.csv"
+
 
 def load_model_from_gcs():
-    client = storage.Client()
-    bucket = client.bucket(BUCKET)
+    client = storage.Client(project=PROJECT_ID)
+    bucket = client.bucket(BUCKET_NAME)
     blob = bucket.blob(MODEL_PATH)
 
-    with tempfile.NamedTemporaryFile() as tmp:
-        blob.download_to_filename(tmp.name)
-        model = joblib.load(tmp.name)
+    # Download as bytes and load directly with joblib
+    buffer = io.BytesIO()
+    blob.download_to_file(buffer)
+    buffer.seek(0)
+    return joblib.load(buffer)
 
-    return model
 
-def run_inference(input_df):
+
+def run_inference():
+    print("Loading model...")
     model = load_model_from_gcs()
+
+    print("Loading data...")
+    input_df = load_csv_gcs(path=DATA_PATH, bucket=BUCKET_NAME)
+
+    print("Running inference...")
     preds = model.predict(input_df)
-    return preds
+
+    input_df['predictions'] = preds
+
+    print("Saving results...")
+    save_csv_to_gcs(input_df, BUCKET_NAME, OUTPUT_PATH)
+    return input_df
+
+
+if __name__ == "__main__":
+    result_df = run_inference()
+    print(result_df.head())

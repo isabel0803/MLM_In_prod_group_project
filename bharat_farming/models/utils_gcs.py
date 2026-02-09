@@ -23,3 +23,12 @@ def save_pickle_to_gcs(obj, bucket: str, path: str):
     with tempfile.NamedTemporaryFile() as tmp:
         joblib.dump(obj, tmp.name)
         blob.upload_from_filename(tmp.name)
+
+def save_csv_to_gcs(df:pd.DataFrame, bucket_name:str, destination_blob_name:str):
+    client = storage.Client(project=PROJECT_ID)
+    bucket = client.bucket(bucket_name)
+    blob = bucket.blob(destination_blob_name)
+
+    # Convert dataframe to CSV string and upload
+    blob.upload_from_string(df.to_csv(index=False), 'text/csv')
+    print(f"File uploaded to gs://{bucket_name}/{destination_blob_name}")
