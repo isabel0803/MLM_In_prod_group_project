@@ -3,6 +3,8 @@ import pandas as pd
 import joblib
 from google.cloud import storage
 
+PROJECT_ID = 'MODIFY_THIS'
+
 # Load CSV from GCS
 def load_csv_gcs(bucket: str, path: str):
     fs = gcsfs.GCSFileSystem()
@@ -14,7 +16,7 @@ def load_csv_gcs(bucket: str, path: str):
 def save_pickle_to_gcs(obj, bucket: str, path: str):
     import tempfile
 
-    client = storage.Client()
+    client = storage.Client(project=PROJECT_ID)
     bucket = client.bucket(bucket)
     blob = bucket.blob(path)
 

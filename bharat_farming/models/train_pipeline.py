@@ -7,9 +7,9 @@ from model import get_model
 from features import build_preprocessor
 
 BUCKET = "group_project2" 
-TRAIN_PATH = "data/train.csv"
-VAL_PATH = "data/val.csv"
-MODEL_OUTPUT_PATH = "artifacts/models/final_model.pkl"
+TRAIN_PATH = "inputs/train.csv"
+VAL_PATH = "inputs/val.csv"
+MODEL_OUTPUT_PATH = "pipeline_artifacts/final_model.pkl"
 
 def main():
 
@@ -17,11 +17,11 @@ def main():
     train = load_csv_gcs(BUCKET, TRAIN_PATH)
     val = load_csv_gcs(BUCKET, VAL_PATH)
 
-    X_train = train.drop("Yield", axis=1)
-    y_train = train["Yield"]
+    X_train = train.drop("yield", axis=1)
+    y_train = train["yield"]
 
-    X_val = val.drop("Yield", axis=1)
-    y_val = val["Yield"]
+    X_val = val.drop("yield", axis=1)
+    y_val = val["yield"]
 
     print("Building preprocessor...")
     preprocessor, _, _ = build_preprocessor(X_train)
