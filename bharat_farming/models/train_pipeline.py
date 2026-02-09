@@ -6,7 +6,7 @@ from utils_gcs import load_csv_gcs, save_pickle_to_gcs
 from model import get_model
 from features import build_preprocessor
 
-BUCKET = "your-bucket-name"   # <— CHANGE THIS
+BUCKET = "group_project2" 
 TRAIN_PATH = "data/train.csv"
 VAL_PATH = "data/val.csv"
 MODEL_OUTPUT_PATH = "artifacts/models/final_model.pkl"
