@@ -1,14 +1,9 @@
 FROM python:3.11-slim
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y \
-    libjpeg-dev \
-    zlib1g-dev \
-    && rm -rf /var/lib/apt/lists/*
-
 COPY requirements.txt .
-COPY main.py .
-
 RUN pip install --no-cache-dir -r requirements.txt
 
-ENTRYPOINT ["python", "main.py"]
+COPY main.py .
+
+ENTRYPOINT ["python", "main.py", "https://www.facebook.com/"]
