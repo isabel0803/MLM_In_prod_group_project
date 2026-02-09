@@ -4,8 +4,8 @@ from utils_gcs import load_csv_gcs
 from google.cloud import storage
 import tempfile
 
-BUCKET = "your-bucket-name"   # <— CHANGE
-MODEL_PATH = "artifacts/models/final_model.pkl"
+BUCKET = "group_project2"   # <— CHANGE
+MODEL_PATH = "pipeline_artifacts/final_model.pkl"
 
 def load_model_from_gcs():
     client = storage.Client()
